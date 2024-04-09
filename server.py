@@ -1,6 +1,7 @@
 
 from flask import Flask, render_template, send_from_directory, request, make_response, session, jsonify
 import os
+import logging
 import gnupg
 import json
 import uuid
