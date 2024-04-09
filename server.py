@@ -3,7 +3,6 @@ import json
 import uuid
 import base64 
 
-
 app = Flask(__name__)
 
 messages = {}
