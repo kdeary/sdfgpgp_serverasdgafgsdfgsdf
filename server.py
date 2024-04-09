@@ -33,10 +33,10 @@ def getMessageRoute():
 	print(messageId)
 
 	if messageId is None:
-		return 'Invalid Request', 400
+		return 'Invalid Request', '400 Bad Request'
 
 	if not messageId in messages:
-		return 'Not Found', 404
+		return 'Not Found', '404 Not Found'
 
 	print('??', messages[messageId])
 	return jsonify({
@@ -47,7 +47,7 @@ def getMessageRoute():
 @app.route('/message', methods=['POST'])
 def createMessageRoute():
 	if not request.is_json:
-		return 'Invalid Request', 400
+		return 'Invalid Request', '400 Bad Request'
 
 	data = request.json
 
@@ -59,10 +59,10 @@ def createMessageRoute():
 	print(callsign, message)
 
 	if not callsign or not message:
-		return 'Invalid Request', 400
+		return 'Invalid Request', '400 Bad Request'
 
 	if not callsign in users:
-		return 'Not Found', 404
+		return 'Not Found', '404 Not Found'
 
 	newID = str(uuid.uuid4())
 
@@ -73,7 +73,7 @@ def createMessageRoute():
 	print(enc.stderr)
 
 	if not enc.ok:
-		return 'Invalid Request', 400
+		return 'Invalid Request', '400 Bad Request'
 
 	return jsonify({
 		"messageId": newID,
