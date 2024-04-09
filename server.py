@@ -11,12 +11,14 @@ messages = {}
 def getMessageRoute():
 	try:
 		messageId = request.args.get('messageId')
+		print(messageId)
 		if not messageId:
 			return 'Invalid Request', 400
 
 		if not messages[messageId]:
 			return 'Not Found', 404
 
+		print(messages[messageId])
 		return jsonify({
 			messageId: messageId,
 			encryptedMessage: messages[messageId]
@@ -32,6 +34,8 @@ def createMessageRoute():
 			return 'Invalid Request', 400
 
 		data = request.json
+
+		print(data)
 		
 		callsign = data.get('callsign')
 		message = data.get('message')
