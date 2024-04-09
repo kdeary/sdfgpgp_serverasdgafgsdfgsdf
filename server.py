@@ -7,25 +7,29 @@ app = Flask(__name__)
 
 messages = {}
 
+gpg = gnupg.GPG()
+input_data = gpg.gen_key_input(
+    name_email='testgpguser@mydomain.com',
+    passphrase='my passphrase')
+key = gpg.gen_key(input_data)
+print(key)
+
 @app.route('/message', methods=['GET'])
 def getMessageRoute():
-	try:
-		messageId = request.args.get('messageId')
-		print(messageId)
-		if not messageId:
-			return 'Invalid Request', 400
+	messageId = request.args.get('messageId')
+	print(messageId)
 
-		if not messages[messageId]:
-			return 'Not Found', 404
-
-		print(messages[messageId])
-		return jsonify({
-			messageId: messageId,
-			encryptedMessage: messages[messageId]
-		}), 200
-	except Exception as err:
-		print(err)
+	if messageId is None:
 		return 'Invalid Request', 400
+
+	if not messageId in messages:
+		return 'Not Found', 404
+
+	print('??', messages[messageId])
+	return jsonify({
+		"messageId": messageId,
+		"encryptedMessage": messages[messageId]
+	}), 200
 
 @app.route('/message', methods=['POST'])
 def createMessageRoute():
@@ -45,17 +49,15 @@ def createMessageRoute():
 
 		newID = str(uuid.uuid4())
 
-		messages[newID] = """
-	-----BEGIN PGP MESSAGE-----
-	Version: Encryption Desktop 10.5.0 (Build 1180)
-	Charset: utf-8
-	{message}
-	-----END PGP MESSAGE-----
-	""".format(message=base64.b64encode(message.encode("ascii")).decode("ascii"))
+		enc = gpg.encrypt(message, 'testgpguser@mydomain.com')
+		messages[newID] = str(enc)
+
+		if not enc.ok:
+			return 'Invalid Request', 400
 
 		return jsonify({
-			'messageId': newID,
-			'encryptedMessage': messages[newID]
+			"messageId": newID,
+			"encryptedMessage": messages[newID]
 		}), 200
 	except Exception as err:
 		print(err)
