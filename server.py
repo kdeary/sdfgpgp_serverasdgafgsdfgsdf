@@ -18,12 +18,12 @@ gpg.import_keys(open('goose.asc').read())
 
 list_keys = gpg.list_keys()
 
-print(list_keys);
+# print(list_keys[0]['fingerprint'])
 
 users = {
-	"mouse": list_keys[0].fingerprint,
-	"firefly": list_keys[1].fingerprint,
-	"goose": list_keys[2].fingerprint,
+	"mouse": list_keys[0]['fingerprint'],
+	"firefly": list_keys[1]['fingerprint'],
+	"goose": list_keys[2]['fingerprint'],
 }
 
 @app.route('/message', methods=['GET'])
