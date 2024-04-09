@@ -21,7 +21,8 @@ def getMessageRoute():
 			messageId: messageId,
 			encryptedMessage: messages[messageId]
 		}), 200
-	except:
+	except Exception as err:
+		print(err)
 		return 'Invalid Request', 400
 
 @app.route('/message', methods=['POST'])
@@ -52,7 +53,8 @@ def createMessageRoute():
 			'messageId': newID,
 			'encryptedMessage': messages[newID]
 		}), 200
-	except:
+	except Exception as err:
+		print(err)
 		return 'Invalid Request', 400
 
 if __name__ == "__main__":
